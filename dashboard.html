@@ -329,28 +329,32 @@
                                 <small>or paste image URL below</small>
                             </div>
                         </div>
-                        <input type="file" id="imageInput" accept="image/*">
-                        <input type="text" class="form-input mt-2" id="imageUrlInput"
-                            placeholder="Or paste image URL here...">
+                        <div class="image-upload-wrapper">
+                            <label for="imageInput" class="form-label">Upload Image</label>
+                            <input type="file" id="imageInput" accept="image/*">
+                            <label for="imageUrlInput" class="form-label mt-2">Or Image URL</label>
+                            <input type="text" class="form-input" id="imageUrlInput"
+                                placeholder="Paste image URL here...">
+                        </div>
                     </div>
 
                     <!-- Food Name -->
                     <div class="form-group">
-                        <label class="form-label">Food Name *</label>
+                        <label class="form-label" for="foodNameInput">Food Name *</label>
                         <input type="text" class="form-input" id="foodNameInput" placeholder="e.g., Chicken Biryani"
                             required>
                     </div>
 
                     <!-- Description -->
                     <div class="form-group">
-                        <label class="form-label">Description</label>
+                        <label class="form-label" for="foodDescInput">Description</label>
                         <textarea class="form-input" id="foodDescInput" rows="2"
                             placeholder="Brief description of the dish..."></textarea>
                     </div>
 
                     <!-- Price -->
                     <div class="form-group">
-                        <label class="form-label">Price (₹) *</label>
+                        <label class="form-label" for="foodPriceInput">Price (₹) *</label>
                         <input type="number" class="form-input" id="foodPriceInput" placeholder="120" min="1" required>
                     </div>
 
@@ -369,14 +373,14 @@
 
                     <!-- Stock Count (shown for limited) -->
                     <div class="form-group" id="stockCountGroup" style="display: none;">
-                        <label class="form-label">Stock Count</label>
+                        <label class="form-label" for="stockCountInput">Stock Count</label>
                         <input type="number" class="form-input" id="stockCountInput" placeholder="50" min="0"
                             value="50">
                     </div>
 
                     <!-- Category -->
                     <div class="form-group">
-                        <label class="form-label">Category</label>
+                        <label class="form-label" for="foodCategoryInput">Category</label>
                         <select class="form-input" id="foodCategoryInput">
                             <option value="breakfast">🌅 Breakfast</option>
                             <option value="main_course">🍛 Main Course</option>
@@ -436,11 +440,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <!-- App Scripts -->
-    <script src="js/firebase-config.js?v=1.2"></script>
-    <script src="js/dashboard.js?v=1.2"></script>
-    <script src="js/menu-manager.js?v=1.2"></script>
-    <script src="js/stock-alerts.js?v=1.2"></script>
-    <script src="js/daily-specials.js?v=1.2"></script>
+    <script src="js/ezeatz-config.js?v=2.0"></script>
+    <script src="js/dashboard.js?v=2.0"></script>
+    <script src="js/menu-manager.js?v=2.0"></script>
+    <script src="js/stock-alerts.js?v=2.0"></script>
+    <script src="js/daily-specials.js?v=2.0"></script>
 </body>
 
 </html>

@@ -88,16 +88,19 @@
     // =====================================================
 
     function setupAuthObserver() {
+        console.log('👀 Setting up Auth Observer on index.html');
         EZEATZ.auth.onAuthStateChanged((user) => {
+            console.log('👤 Auth State (index.html):', user ? 'Logged In (' + user.uid + ')' : 'Logged Out');
             if (user) {
-                // User is signed in, check if on login page
-                const isLoginPage = window.location.pathname.includes('index.html') ||
-                    window.location.pathname === '/' ||
-                    window.location.pathname.endsWith('/');
+                const path = window.location.pathname;
+                const isLoginPage = path === '/' ||
+                    path.endsWith('/') ||
+                    path.endsWith('index.html') ||
+                    path.includes('index.html');
 
-                if (isLoginPage) {
-                    console.log('🔄 User authenticated, redirecting to dashboard...');
-                    window.location.href = 'dashboard.html';
+                if (isLoginPage && !path.includes('dashboard.html')) {
+                    console.log('🚀 Redirecting to dashboard.html...');
+                    window.location.replace('dashboard.html');
                 }
             }
         });

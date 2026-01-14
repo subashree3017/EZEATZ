@@ -52,10 +52,13 @@
     // =====================================================
 
     async function init() {
-        showLoading(true);
+        console.log('🚀 Dashboard Init - Checking Auth...');
+        showLoading(true, 'Verifying session...');
 
         // Check authentication
         EZEATZ.auth.onAuthStateChanged(async (user) => {
+            console.log('👤 Dashboard Auth State:', user ? 'Logged In (' + user.uid + ')' : 'Logged Out');
+
             if (user) {
                 currentUser = user;
                 await loadUserData();
@@ -67,8 +70,20 @@
                 highlightTodayInDaysGrid();
                 showLoading(false);
             } else {
-                // Redirect to login
-                window.location.href = 'index.html';
+                console.log('⏳ No user session found initially. Checking again in 2s...');
+
+                // Show a clean loading state instead of a flicker
+                showLoading(true, 'Verifying authentication...');
+
+                setTimeout(() => {
+                    if (!EZEATZ.auth.currentUser) {
+                        console.log('🚫 No user found after delay. Redirecting to login page...');
+                        window.location.replace('index.html');
+                    } else {
+                        console.log('✅ User session restored. Loading dashboard data...');
+                        // No need to do anything here, the user found branch will handle it
+                    }
+                }, 2000);
             }
         });
     }
