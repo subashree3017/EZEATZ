@@ -356,6 +356,83 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       const SizedBox(height: 24),
 
+                      // Divider
+                      Row(
+                        children: [
+                          Expanded(child: Divider(color: Colors.grey.shade300)),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'or continue with',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                          Expanded(child: Divider(color: Colors.grey.shade300)),
+                        ],
+                      ).animate().fadeIn(delay: 950.ms),
+
+                      const SizedBox(height: 24),
+
+                      // Google Sign In
+                      SizedBox(
+                            width: double.infinity,
+                            height: 56,
+                            child: OutlinedButton.icon(
+                              onPressed: authProvider.isLoading
+                                  ? null
+                                  : () async {
+                                      final success = await authProvider
+                                          .signInWithGoogle();
+                                      if (success && context.mounted) {
+                                        Navigator.of(
+                                          context,
+                                        ).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                            builder: (_) => const HomeScreen(),
+                                          ),
+                                          (route) => false,
+                                        );
+                                      } else if (context.mounted &&
+                                          authProvider.error != null) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(authProvider.error!),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      }
+                                    },
+                              icon: Image.network(
+                                'https://www.google.com/favicon.ico',
+                                width: 24,
+                                height: 24,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.g_mobiledata, size: 24),
+                              ),
+                              label: const Text(
+                                'Continue with Google',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.black87,
+                                side: BorderSide(color: Colors.grey.shade300),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                            ),
+                          )
+                          .animate()
+                          .fadeIn(delay: 1000.ms)
+                          .slideY(begin: 0.2, end: 0),
+
+                      const SizedBox(height: 32),
+
                       // Login Link
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
