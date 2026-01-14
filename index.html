@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EZEATZ Admin - College Canteen Management System">
+    <title>EZEATZ Admin - Sign In</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+</head>
+
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="spinner"></div>
+        <p class="loading-text">Signing you in...</p>
+    </div>
+
+    <!-- Auth Container -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Logo -->
+            <div class="auth-logo">
+                <div class="logo-icon">🍽️</div>
+                <h1>EZEATZ ADMIN</h1>
+                <p>College Canteen Management Portal</p>
+            </div>
+
+            <!-- Step 1: Admin Simple Login -->
+            <div class="auth-step active" id="stepLogin">
+                <form id="simpleLoginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="adminNameInput">Admin Name</label>
+                        <input type="text" id="adminNameInput" class="form-input" placeholder="Enter your name"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Enter Dashboard
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js?v=1.2"></script>
+    <script src="js/auth.js?v=1.2"></script>
+</body>
+
+</html>

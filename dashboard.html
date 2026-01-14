@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EZEATZ Admin Dashboard - Manage your canteen menu">
+    <title>Dashboard - EZEATZ Admin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+</head>
+
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading dashboard...</p>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <span class="logo-icon">🍽️</span>
+                    <h2>EZEATZ</h2>
+                </div>
+            </div>
+
+            <!-- Canteen Selector -->
+            <div class="canteen-selector">
+                <label>Select Canteen</label>
+                <select class="canteen-dropdown" id="canteenSelector">
+                    <option value="main_canteen">Main Campus Canteen</option>
+                    <option value="block_a_canteen">Block A Canteen</option>
+                    <option value="block_b_canteen">Block B Cafeteria</option>
+                </select>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="sidebar-nav">
+                <a class="nav-item active" data-section="menu">
+                    <span class="nav-icon">🍕</span>
+                    <span class="nav-text">Menu Items</span>
+                </a>
+                <a class="nav-item" data-section="specials">
+                    <span class="nav-icon">⭐</span>
+                    <span class="nav-text">Daily Specials</span>
+                </a>
+                <a class="nav-item" data-section="stock">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">Stock Management</span>
+                    <span class="nav-badge" id="lowStockBadge">0</span>
+                </a>
+                <a class="nav-item" data-section="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="sidebar-user">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Admin User</div>
+                    <div class="user-email" id="userEmail">admin@ezeatz.com</div>
+                </div>
+                <button class="logout-btn" id="logoutBtn" title="Sign Out">
+                    🚪
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <h1 class="page-title" id="pageTitle">Menu Items</h1>
+                </div>
+                <div class="header-right">
+                    <div class="datetime-display" style="position: relative;">
+                        <div class="date-section">
+                            <span class="icon">📅</span>
+                            <span class="date-text" id="currentDate">Sun, Jan 11, 2026</span>
+                        </div>
+                        <div class="datetime-divider"></div>
+                        <div class="time-section">
+                            <span class="icon">🕐</span>
+                            <span class="time-text" id="currentTime">2:36 PM</span>
+                        </div>
+                        <button class="calendar-btn" id="calendarBtn">
+                            📆 Calendar
+                        </button>
+
+                        <!-- Calendar Popup -->
+                        <div class="calendar-popup" id="calendarPopup">
+                            <div class="calendar-header">
+                                <button class="calendar-nav" id="prevMonth">◀</button>
+                                <span class="calendar-month" id="calendarMonth">January 2026</span>
+                                <button class="calendar-nav" id="nextMonth">▶</button>
+                            </div>
+                            <div class="calendar-grid" id="calendarGrid">
+                                <!-- Calendar days will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Stock Alert Banner -->
+            <div class="stock-alert-banner" id="stockAlertBanner" style="display: none;">
+                <div class="alert-content">
+                    <span class="alert-icon">🔔</span>
+                    <div class="alert-text">
+                        <strong>Stock Update Reminder</strong>
+                        <span class="alert-timer">Next reminder in <span id="alertCountdown">30:00</span></span>
+                    </div>
+                </div>
+                <div class="alert-actions">
+                    <button class="alert-btn" id="dismissAlert">Later</button>
+                    <button class="alert-btn primary" id="updateStockBtn">Update Stock</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Menu Section -->
+                <section id="menuSection" class="content-section">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon yellow">🍽️</div>
+                            <div class="stat-info">
+                                <h3 id="totalItems">0</h3>
+                                <p>Total Items</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">✅</div>
+                            <div class="stat-info">
+                                <h3 id="enabledItems">0</h3>
+                                <p>Available</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon red">📦</div>
+                            <div class="stat-info">
+                                <h3 id="lowStockItems">0</h3>
+                                <p>Low Stock</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue">⭐</div>
+                            <div class="stat-info">
+                                <h3 id="todaySpecials">0</h3>
+                                <p>Today's Specials</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section Header -->
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <span class="icon">🍕</span>
+                            Menu Items
+                        </h2>
+                        <button class="btn btn-primary" id="addFoodBtn">
+                            ➕ Add New Item
+                        </button>
+                    </div>
+
+                    <!-- Food Grid -->
+                    <div class="food-grid" id="foodGrid">
+                        <!-- Food cards will be populated by JS -->
+
+                        <!-- Add Food Card (Always visible) -->
+                        <div class="add-food-card" id="addFoodCard">
+                            <div class="add-icon">+</div>
+                            <p>Add New Food Item</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Daily Specials Section -->
+                <section id="specialsSection" class="content-section hidden">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <span class="icon">⭐</span>
+                            Daily Specials Configuration
+                        </h2>
+                    </div>
+
+                    <div class="specials-container">
+                        <p style="margin-bottom: 20px; color: var(--gray-600);">
+                            Configure which food items should be automatically featured as specials on specific days.
+                            These items will be highlighted and auto-enabled when the day arrives.
+                        </p>
+
+                        <!-- Days Grid -->
+                        <div class="days-grid" id="daysGrid">
+                            <div class="day-card" data-day="sunday">
+                                <div class="day-name">Sun</div>
+                                <div class="day-specials-count">0 items</div>
+                            </div>
+                            <div class="day-card" data-day="monday">
+                                <div class="day-name">Mon</div>
+                                <div class="day-specials-count">0 items</div>
+                            </div>
+                            <div class="day-card" data-day="tuesday">
+                                <div class="day-name">Tue</div>
+                                <div class="day-specials-count">0 items</div>
+                            </div>
+                            <div class="day-card" data-day="wednesday">
+                                <div class="day-name">Wed</div>
+                                <div class="day-specials-count">0 items</div>
+                            </div>
+                            <div class="day-card" data-day="thursday">
+                                <div class="day-name">Thu</div>
+                                <div class="day-specials-count">0 items</div>
+                            </div>
+                            <div class="day-card" data-day="friday">
+                                <div class="day-name">Fri</div>
+                                <div class="day-specials-count">0 items</div>
+                            </div>
+                            <div class="day-card" data-day="saturday">
+                                <div class="day-name">Sat</div>
+                                <div class="day-specials-count">0 items</div>
+                            </div>
+                        </div>
+
+                        <!-- Specials Configuration for Selected Day -->
+                        <div id="daySpecialsConfig" style="margin-top: 24px;">
+                            <h3 style="margin-bottom: 16px; font-size: 1.125rem;">
+                                <span id="selectedDayName">Sunday</span> Specials
+                            </h3>
+                            <div class="food-grid" id="specialsGrid">
+                                <!-- Special items will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Stock Management Section -->
+                <section id="stockSection" class="content-section hidden">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <span class="icon">📦</span>
+                            Stock Management
+                        </h2>
+                        <button class="btn btn-secondary" id="updateAllStockBtn">
+                            🔄 Update All Stock
+                        </button>
+                    </div>
+
+                    <div class="specials-container">
+                        <p style="margin-bottom: 20px; color: var(--gray-600);">
+                            Manage stock levels for limited items. Items with 0 stock will be automatically disabled.
+                            You'll receive reminders every 30 minutes to update stock.
+                        </p>
+
+                        <div class="food-grid" id="stockGrid">
+                            <!-- Stock items will be populated here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settingsSection" class="content-section hidden">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <span class="icon">⚙️</span>
+                            Settings
+                        </h2>
+                    </div>
+
+                    <div class="specials-container">
+                        <div class="form-group">
+                            <label class="form-label">Canteen Name</label>
+                            <input type="text" class="form-input" id="settingsCanteenName" value="Main Campus Canteen">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-input" id="settingsLocation"
+                                value="Ground Floor, Main Building">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Stock Alert Interval (minutes)</label>
+                            <input type="number" class="form-input" id="settingsAlertInterval" value="30" min="5"
+                                max="120">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" style="display: flex; align-items: center; gap: 12px;">
+                                <input type="checkbox" id="settingsNotifications" checked>
+                                Enable Browser Notifications
+                            </label>
+                        </div>
+
+                        <button class="btn btn-primary" id="saveSettingsBtn">
+                            💾 Save Settings
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Food Modal -->
+    <div class="modal-overlay" id="foodModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="foodModalTitle">Add New Item</h3>
+                <button class="modal-close" id="closeFoodModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="foodForm">
+                    <!-- Image Upload -->
+                    <div class="form-group">
+                        <label class="form-label">Food Image</label>
+                        <div class="image-upload-area" id="imageUploadArea">
+                            <div class="upload-placeholder">
+                                <div class="icon">📷</div>
+                                <p>Click to upload image</p>
+                                <small>or paste image URL below</small>
+                            </div>
+                        </div>
+                        <input type="file" id="imageInput" accept="image/*">
+                        <input type="text" class="form-input mt-2" id="imageUrlInput"
+                            placeholder="Or paste image URL here...">
+                    </div>
+
+                    <!-- Food Name -->
+                    <div class="form-group">
+                        <label class="form-label">Food Name *</label>
+                        <input type="text" class="form-input" id="foodNameInput" placeholder="e.g., Chicken Biryani"
+                            required>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-input" id="foodDescInput" rows="2"
+                            placeholder="Brief description of the dish..."></textarea>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="form-group">
+                        <label class="form-label">Price (₹) *</label>
+                        <input type="number" class="form-input" id="foodPriceInput" placeholder="120" min="1" required>
+                    </div>
+
+                    <!-- Stock Type -->
+                    <div class="form-group">
+                        <label class="form-label">Stock Type</label>
+                        <div class="stock-type-toggle">
+                            <button type="button" class="stock-type-btn active" data-type="unlimited">
+                                ♾️ Unlimited
+                            </button>
+                            <button type="button" class="stock-type-btn" data-type="limited">
+                                📦 Limited
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stock Count (shown for limited) -->
+                    <div class="form-group" id="stockCountGroup" style="display: none;">
+                        <label class="form-label">Stock Count</label>
+                        <input type="number" class="form-input" id="stockCountInput" placeholder="50" min="0"
+                            value="50">
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-input" id="foodCategoryInput">
+                            <option value="breakfast">🌅 Breakfast</option>
+                            <option value="main_course">🍛 Main Course</option>
+                            <option value="snacks">🍿 Snacks</option>
+                            <option value="fast_food">🍔 Fast Food</option>
+                            <option value="beverages">🥤 Beverages</option>
+                            <option value="desserts">🍰 Desserts</option>
+                        </select>
+                    </div>
+
+                    <!-- Enabled -->
+                    <div class="form-group">
+                        <label class="form-label" style="display: flex; align-items: center; gap: 12px;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="foodEnabledInput" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            Item is available for ordering
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancelFoodBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="saveFoodBtn">Save Item</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirm Delete</h3>
+                <button class="modal-close" id="closeDeleteModal">✕</button>
+            </div>
+            <div class="modal-body text-center">
+                <div style="font-size: 3rem; margin-bottom: 16px;">🗑️</div>
+                <p>Are you sure you want to delete <strong id="deleteItemName">this item</strong>?</p>
+                <p style="color: var(--gray-500); font-size: 0.875rem; margin-top: 8px;">
+                    This action cannot be undone.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelDeleteBtn">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js?v=1.2"></script>
+    <script src="js/dashboard.js?v=1.2"></script>
+    <script src="js/menu-manager.js?v=1.2"></script>
+    <script src="js/stock-alerts.js?v=1.2"></script>
+    <script src="js/daily-specials.js?v=1.2"></script>
+</body>
+
+</html>
